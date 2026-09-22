@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.practiceautomation.tests.AdsTest
+-------------------------------------------------------------------------------
+Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 95.49 s -- in com.practiceautomation.tests.AdsTest
