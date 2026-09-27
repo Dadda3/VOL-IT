@@ -25,8 +25,8 @@ mvn allure:serve
 * **Библиотека автоматизации**: Selenium WebDriver (v4.25+)
 * **Тестовый фреймворк**: JUnit 5 Jupiter (v5.11+)
 * **Паттерн проектирования**: Page Object Model (POM)
-* **Отчетность**: Allure Report + AspectJ Weaver (автоматическое сохранение скриншотов при падении теста через `AllureScreenshotExtension`)
-* **Браузер по умолчанию**: Google Chrome (с флагом `--headless=new` и стратегией `PageLoadStrategy.EAGER` для быстрого и стабильного прогона)
+* **Отчетность**: Allure Report
+* **Браузер по умолчанию**: Google Chrome 
 
 ### Структура проекта
 ```text
