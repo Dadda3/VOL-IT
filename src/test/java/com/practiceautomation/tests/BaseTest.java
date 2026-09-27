@@ -35,9 +35,11 @@ public abstract class BaseTest {
             options.addArguments("--disable-gpu");
             options.addArguments("--no-sandbox");
             options.addArguments("--disable-dev-shm-usage");
+            options.addArguments("--remote-allow-origins=*");
             driver = new ChromeDriver(options);
         }
 
+        driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(0));
     }
 

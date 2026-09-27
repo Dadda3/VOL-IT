@@ -38,19 +38,26 @@ public abstract class BasePage {
 
     @Step("Кликнуть по элементу: {locator}")
     protected void click(By locator) {
-        findClickable(locator).click();
+        WebElement element = findClickable(locator);
+        scrollTo(element);
+        try {
+            element.click();
+        } catch (Exception e) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+        }
     }
 
     @Step("Очистить и ввести текст '{text}' в поле: {locator}")
     protected void type(By locator, String text) {
         WebElement element = findClickable(locator);
+        scrollTo(element);
         element.clear();
         element.sendKeys(text);
     }
 
     @Step("Получить текст элемента: {locator}")
     protected String getText(By locator) {
-        return findVisible(locator).getText();
+        return findVisible(locator).getText().trim();
     }
 
     protected void scrollTo(WebElement element) {

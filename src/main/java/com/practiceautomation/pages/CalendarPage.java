@@ -2,17 +2,25 @@ package com.practiceautomation.pages;
 
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+import java.util.List;
 
 public class CalendarPage extends BasePage {
     public static final String PAGE_URL = "https://practice-automation.com/calendars/";
 
-    // Локаторы инпута и формы[cite: 1]
     private final By dateInput = By.id("g1065-1-selectorenteradate");
     private final By submitButton = By.cssSelector("button.pushbutton-wide");
-    private final By successMessage = By.cssSelector("div.contact-form-submission h4");
-    private final By fieldErrorMessage = By.id("g1065-1-selectorenteradate-text-error-message");
+    private final By successMessage = By.cssSelector("div.contact-form-submission");
+    private final By fieldErrorMessage = By.cssSelector(
+            "#g1065-1-selectorenteradate-text-error-message, .contact-form-error, [id*='selectorenteradate'][id*='error'], .form-error"
+    );
     private final By formatHint = By.id("g1065-1-selectorenteradate-text-format");
 
     public CalendarPage(WebDriver driver) {
@@ -30,6 +38,7 @@ public class CalendarPage extends BasePage {
         WebElement input = findClickable(dateInput);
         scrollTo(input);
         input.clear();
+        input.sendKeys(Keys.chord(Keys.CONTROL, "a"), Keys.BACK_SPACE);
         input.sendKeys(date);
         return this;
     }
@@ -39,14 +48,13 @@ public class CalendarPage extends BasePage {
         WebElement input = findClickable(dateInput);
         scrollTo(input);
         input.clear();
+        input.sendKeys(Keys.chord(Keys.CONTROL, "a"), Keys.BACK_SPACE);
         return this;
     }
 
     @Step("Нажать кнопку Submit")
     public CalendarPage submitForm() {
-        WebElement btn = findClickable(submitButton);
-        scrollTo(btn);
-        btn.click();
+        click(submitButton);
         return this;
     }
 
@@ -57,7 +65,27 @@ public class CalendarPage extends BasePage {
 
     @Step("Получить текст ошибки валидации под полем")
     public String getFieldErrorMessage() {
-        return getText(fieldErrorMessage);
+        try {
+            return new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions.visibilityOfElementLocated(fieldErrorMessage))
+                    .getText().trim();
+        } catch (Exception e) {
+            List<WebElement> errors = driver.findElements(fieldErrorMessage);
+            for (WebElement el : errors) {
+                if (el.isDisplayed() && !el.getText().trim().isEmpty()) {
+                    return el.getText().trim();
+                }
+            }
+            try {
+                WebElement input = driver.findElement(dateInput);
+                String validationMessage = (String) ((JavascriptExecutor) driver)
+                        .executeScript("return arguments[0].validationMessage;", input);
+                if (validationMessage != null && !validationMessage.trim().isEmpty()) {
+                    return validationMessage.trim();
+                }
+            } catch (Exception ignored) {}
+            return "";
+        }
     }
 
     @Step("Получить текст подсказки формата")

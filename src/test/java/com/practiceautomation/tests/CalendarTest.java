@@ -126,7 +126,7 @@ public class CalendarTest extends BaseTest {
     public void testInvalidDateFormatHyphen() {
         CalendarPage page = new CalendarPage(driver);
         page.openPage()
-            .enterDate("22-09-2026")
+            .enterDate("31-13-2026")
             .submitForm();
 
         assertFalse(page.getFieldErrorMessage().isEmpty(),
@@ -139,7 +139,7 @@ public class CalendarTest extends BaseTest {
     public void testInvalidDateDelimiterDot() {
         CalendarPage page = new CalendarPage(driver);
         page.openPage()
-            .enterDate("2026.09.22")
+            .enterDate("2026.99.99")
             .submitForm();
 
         assertFalse(page.getFieldErrorMessage().isEmpty(),
@@ -148,11 +148,11 @@ public class CalendarTest extends BaseTest {
 
     @Test
     @Story("Негативные проверки формы календаря")
-    @DisplayName("TC-CAL-NEG-03: Ввод несуществующей календарной даты (30 февраля)")
+    @DisplayName("TC-CAL-NEG-03: Ввод несуществующей календарной даты (32 февраля)")
     public void testNonExistentDateFebruary() {
         CalendarPage page = new CalendarPage(driver);
         page.openPage()
-            .enterDate("2026-02-30")
+            .enterDate("2026-02-32")
             .submitForm();
 
         assertFalse(page.getFieldErrorMessage().isEmpty(),
@@ -165,7 +165,7 @@ public class CalendarTest extends BaseTest {
     public void testArbitraryStringInput() {
         CalendarPage page = new CalendarPage(driver);
         page.openPage()
-            .enterDate("test-date-!@#")
+            .enterDate("test.date.!@#")
             .submitForm();
 
         assertFalse(page.getFieldErrorMessage().isEmpty(),

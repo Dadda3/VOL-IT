@@ -2,6 +2,7 @@ package com.practiceautomation.pages;
 
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -15,12 +16,10 @@ import java.util.List;
 public class AdsPage extends BasePage {
     public static final String PAGE_URL = "https://practice-automation.com/ads/";
 
-    // Локаторы основного контента страницы
     private final By pageTitle = By.tagName("h1");
     private final By countdownText = By.xpath("//p[contains(text(),'An ad will appear')]");
     private final By videoTutorialLink = By.linkText("how to handle ads in test automation");
 
-    // Локаторы рекламного модального окна (Popup Maker ID: 1272)
     private final By adOverlay = By.id("pum-1272");
     private final By adContainer = By.id("popmake-1272");
     private final By adTitle = By.id("pum_popup_title_1272");
@@ -40,8 +39,13 @@ public class AdsPage extends BasePage {
     @Step("Ожидать автоматического появления рекламного окна (таймаут: {timeoutSeconds} сек.)")
     public AdsPage waitForAdToAppear(int timeoutSeconds) {
         new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds))
+                .pollingEvery(Duration.ofMillis(300))
                 .until(ExpectedConditions.visibilityOfElementLocated(adContainer));
         return this;
+    }
+
+    public AdsPage waitForAdToAppear() {
+        return waitForAdToAppear(15);
     }
 
     @Step("Проверить, отображается ли реклама прямо сейчас")
@@ -90,7 +94,14 @@ public class AdsPage extends BasePage {
     @Step("Кликнуть по оверлею вне области рекламного окна")
     public AdsPage clickOverlayOutsideAd() {
         WebElement overlay = find(adOverlay);
-        new Actions(driver).moveToElement(overlay, 10, 10).click().perform();
+        try {
+            new Actions(driver).moveToLocation(10, 10).click().perform();
+        } catch (Exception e) {
+            ((JavascriptExecutor) driver).executeScript(
+                    "arguments[0].dispatchEvent(new MouseEvent('click', {clientX: 10, clientY: 10, bubbles: true}));",
+                    overlay
+            );
+        }
         return this;
     }
 

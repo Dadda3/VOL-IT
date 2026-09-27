@@ -1,8 +1,8 @@
 package com.practiceautomation.extensions;
 
 import io.qameta.allure.Allure;
+import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.TestWatcher;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -10,15 +10,21 @@ import org.openqa.selenium.WebDriver;
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.Field;
 
-public class AllureScreenshotExtension implements TestWatcher {
+public class AllureScreenshotExtension implements AfterTestExecutionCallback {
 
     @Override
-    public void testFailed(ExtensionContext context, Throwable cause) {
-        WebDriver driver = getDriver(context);
-        if (driver != null) {
-            byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
-            Allure.addAttachment("Скриншот при падении теста", "image/png",
-                    new ByteArrayInputStream(screenshot), ".png");
+    public void afterTestExecution(ExtensionContext context) {
+        if (context.getExecutionException().isPresent()) {
+            WebDriver driver = getDriver(context);
+            if (driver != null) {
+                try {
+                    byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+                    Allure.addAttachment("Скриншот при падении теста", "image/png",
+                            new ByteArrayInputStream(screenshot), ".png");
+                } catch (Exception e) {
+                    System.err.println("Не удалось прикрепить скриншот в Allure: " + e.getMessage());
+                }
+            }
         }
     }
 

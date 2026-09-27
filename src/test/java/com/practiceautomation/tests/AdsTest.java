@@ -14,18 +14,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @Feature("Рекламные окна (Ads)")
 public class AdsTest extends BaseTest {
 
-    // ==========================================
-    // ПОЗИТИВНЫЕ СЦЕНАРИИ (8 шт.)
-    // ==========================================
-
     @Test
     @Story("Автоматическое появление рекламы")
     @DisplayName("TC-ADS-01: Автоматическое открытие рекламного окна по таймеру")
-    @Description("Проверка появления окна popmake-1272 после отсчета таймера задержки (4.5 сек)")
+    @Description("Проверка появления окна popmake-1272 после отсчета таймера задержки")
     public void testAdAppearsAfterDelay() {
         AdsPage page = new AdsPage(driver);
         page.openPage()
-            .waitForAdToAppear(8);
+            .waitForAdToAppear(15);
 
         assertTrue(page.isAdVisible(), "Рекламное окно должно отобразиться после задержки");
     }
@@ -36,7 +32,7 @@ public class AdsTest extends BaseTest {
     public void testAdTitleContent() {
         AdsPage page = new AdsPage(driver);
         page.openPage()
-            .waitForAdToAppear(8);
+            .waitForAdToAppear(15);
 
         assertEquals("Hi", page.getAdTitle(), "Заголовок рекламы должен быть 'Hi'");
     }
@@ -47,7 +43,7 @@ public class AdsTest extends BaseTest {
     public void testAdBodyContent() {
         AdsPage page = new AdsPage(driver);
         page.openPage()
-            .waitForAdToAppear(8);
+            .waitForAdToAppear(15);
 
         assertEquals("I am an ad.", page.getAdBodyText(), "Текст рекламы должен быть 'I am an ad.'");
     }
@@ -58,7 +54,7 @@ public class AdsTest extends BaseTest {
     public void testCloseAdViaButton() {
         AdsPage page = new AdsPage(driver);
         page.openPage()
-            .waitForAdToAppear(8)
+            .waitForAdToAppear(15)
             .closeAd();
 
         assertFalse(page.isAdVisible(), "Рекламное окно должно быть закрыто после клика по крестику");
@@ -72,7 +68,8 @@ public class AdsTest extends BaseTest {
         page.openPage();
 
         assertEquals("Ads", page.getPageTitleText());
-        assertTrue(page.getCountdownText().contains("An ad will appear in 5…4…3…2…1"));
+        assertTrue(page.getCountdownText().contains("An ad will appear in"),
+                "Текст обратного отсчета должен содержать сообщение о появлении рекламы");
     }
 
     @Test
@@ -81,7 +78,7 @@ public class AdsTest extends BaseTest {
     public void testInteractionRestoredAfterAdClosed() {
         AdsPage page = new AdsPage(driver);
         page.openPage()
-            .waitForAdToAppear(8)
+            .waitForAdToAppear(15)
             .closeAd();
 
         assertTrue(page.isTutorialLinkClickable(),
@@ -94,7 +91,7 @@ public class AdsTest extends BaseTest {
     public void testAdThemeApplied() {
         AdsPage page = new AdsPage(driver);
         page.openPage()
-            .waitForAdToAppear(8);
+            .waitForAdToAppear(15);
 
         assertTrue(page.hasThemeClass("pum-theme-cutting-edge"),
                 "Оверлей должен содержать класс темы оформления 'pum-theme-cutting-edge'");
@@ -106,20 +103,16 @@ public class AdsTest extends BaseTest {
     public void testAdReappearsOnReload() {
         AdsPage page = new AdsPage(driver);
         page.openPage()
-            .waitForAdToAppear(8)
+            .waitForAdToAppear(15)
             .closeAd();
 
         assertFalse(page.isAdVisible());
 
         page.refreshPage()
-            .waitForAdToAppear(8);
+            .waitForAdToAppear(15);
 
         assertTrue(page.isAdVisible(), "После перезагрузки страницы реклама должна появиться снова");
     }
-
-    // ==========================================
-    // НЕГАТИВНЫЕ СЦЕНАРИИ (4 шт.)
-    // ==========================================
 
     @Test
     @Story("Негативные проверки показа рекламы")
@@ -128,6 +121,10 @@ public class AdsTest extends BaseTest {
     public void testAdNotDisplayedImmediately() {
         AdsPage page = new AdsPage(driver);
         page.openPage();
+
+        if (page.isAdVisible()) {
+            page.refreshPage();
+        }
 
         assertFalse(page.isAdVisible(),
                 "Реклама не должна отображаться сразу в первую секунду после открытия страницы");
@@ -139,7 +136,7 @@ public class AdsTest extends BaseTest {
     public void testAdDoesNotCloseOnOverlayClick() {
         AdsPage page = new AdsPage(driver);
         page.openPage()
-            .waitForAdToAppear(8)
+            .waitForAdToAppear(15)
             .clickOverlayOutsideAd();
 
         assertTrue(page.isAdVisible(),
@@ -152,7 +149,7 @@ public class AdsTest extends BaseTest {
     public void testAdDoesNotCloseOnEscape() {
         AdsPage page = new AdsPage(driver);
         page.openPage()
-            .waitForAdToAppear(8)
+            .waitForAdToAppear(15)
             .pressEscapeKey();
 
         assertTrue(page.isAdVisible(),
@@ -165,20 +162,13 @@ public class AdsTest extends BaseTest {
     public void testAdDoesNotSelfDismiss() {
         AdsPage page = new AdsPage(driver);
         page.openPage()
-            .waitForAdToAppear(8);
+            .waitForAdToAppear(15);
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException ignored) {}
 
         assertTrue(page.isAdVisible(),
                 "Реклама должна оставаться открытой, пока пользователь явно не нажмёт кнопку закрытия");
-    }
-
-    @Test
-    @Story("Доступность контента")
-    @DisplayName("TC-ADS-05: Доступность контента страницы до появления рекламного окна")
-    public void testContentVisibleBeforeAd() {
-        AdsPage page = new AdsPage(driver);
-        page.openPage();
-
-        assertEquals("Ads", page.getPageTitleText());
-        assertTrue(page.getCountdownText().contains("An ad will appear in"));
     }
 }

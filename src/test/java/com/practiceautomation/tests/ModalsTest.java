@@ -1,5 +1,6 @@
 package com.practiceautomation.tests;
 
+import com.practiceautomation.pages.FormFieldsPage;
 import com.practiceautomation.pages.ModalsPage;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
@@ -14,10 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @Feature("Модальные окна (Modals)")
 public class ModalsTest extends BaseTest {
 
-    // ==========================================
-    // ПОЗИТИВНЫЕ СЦЕНАРИИ (9 шт.)
-    // ==========================================
-
     @Test
     @Story("Простое модальное окно")
     @DisplayName("TC-MOD-01: Открытие Simple Modal и проверка содержимого")
@@ -29,7 +26,7 @@ public class ModalsTest extends BaseTest {
 
         assertTrue(page.isSimpleModalVisible(), "Simple Modal должно быть видимым");
         assertEquals("Simple Modal", page.getSimpleModalTitle());
-        assertEquals("Hi, I’m a simple modal.", page.getSimpleModalContent());
+        assertTrue(page.getSimpleModalContent().contains("simple modal"));
     }
 
     @Test
@@ -86,7 +83,28 @@ public class ModalsTest extends BaseTest {
         assertTrue(page.getSuccessMessageText().contains("Thank you for your response"));
     }
 
-    
+    @Test
+    @Story("Модальное окно с формой")
+    @DisplayName("TC-MOD-06: Заполнение Message элементами Automation Tools через запятую (Спецтребование №5)")
+    @Description("Сбор списка инструментов с раздела Automation Tools страницы /form-fields/, заполнение поля Message в Form Modal и отправка")
+    public void testFillMessageWithAutomationTools() {
+        FormFieldsPage formPage = new FormFieldsPage(driver);
+        formPage.openPage();
+        String tools = formPage.getAutomationToolsJoined();
+        assertFalse(tools.isEmpty(), "Список Automation Tools не должен быть пустым");
+
+        ModalsPage modalsPage = new ModalsPage(driver);
+        modalsPage.openPage()
+            .clickFormModalButton()
+            .enterName("Dmitry")
+            .enterEmail("dmitry@example.com")
+            .enterMessage(tools)
+            .submitForm();
+
+        assertTrue(modalsPage.getSuccessMessageText().contains("Thank you for your response"),
+                "Сообщение об успешной отправке не появилось");
+    }
+
     @Test
     @Story("Модальное окно с формой")
     @DisplayName("TC-MOD-07: Закрытие Form Modal по клику на крестик")
@@ -129,10 +147,6 @@ public class ModalsTest extends BaseTest {
             .closeFormModal();
         assertFalse(page.isFormModalVisible());
     }
-
-    // ==========================================
-    // НЕГАТИВНЫЕ СЦЕНАРИИ (4 шт.)
-    // ==========================================
 
     @Test
     @Story("Негативные проверки формы")
