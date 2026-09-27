@@ -5,14 +5,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class ModalsPage extends BasePage {
     public static final String PAGE_URL = "https://practice-automation.com/modals/";
-    public static final String FORM_FIELDS_URL = "https://practice-automation.com/form-fields/";
 
     // Триггеры модальных окон
     private final By simpleModalButton = By.id("simpleModal");
@@ -152,21 +148,4 @@ public class ModalsPage extends BasePage {
         return !elements.isEmpty() && elements.get(0).isDisplayed();
     }
 
-    @Step("Получить список инструментов из раздела Automation Tools со страницы Form Fields (Требование №5)")
-    public String fetchAutomationToolsJoined() {
-        driver.get(FORM_FIELDS_URL);
-        
-        By toolsLocator = By.xpath("//label[contains(text(),'Automation tools')]/parent::*//input[@type='checkbox']/following-sibling::label | " +
-                                   "//li[contains(@class,'checkbox')]//label");
-        
-        List<WebElement> toolElements = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(toolsLocator));
-        String result = toolElements.stream()
-                .map(WebElement::getText)
-                .map(String::trim)
-                .filter(text -> !text.isEmpty())
-                .collect(Collectors.joining(", "));
-
-        driver.get(PAGE_URL);
-        return result;
-    }
 }

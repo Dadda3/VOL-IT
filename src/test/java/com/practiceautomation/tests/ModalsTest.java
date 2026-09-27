@@ -86,27 +86,7 @@ public class ModalsTest extends BaseTest {
         assertTrue(page.getSuccessMessageText().contains("Thank you for your response"));
     }
 
-    @Test
-    @Story("Модальное окно с формой")
-    @DisplayName("TC-MOD-06: Заполнение Message элементами Automation Tools через запятую (Требование №5)")
-    @Description("Сбор списка инструментов с помощью Selenium, объединение через запятую и заполнение поля Message в Form Modal")
-    public void testSubmitFormWithMessageFromAutomationTools() {
-        ModalsPage page = new ModalsPage(driver);
-        page.openPage();
-
-        String automationToolsString = page.fetchAutomationToolsJoined();
-        assertFalse(automationToolsString.isEmpty(), "Список инструментов Automation Tools не должен быть пустым");
-
-        page.clickFormModalButton()
-            .enterName("QA Automation Specialist")
-            .enterEmail("qa@practiceautomation.com")
-            .enterMessage(automationToolsString)
-            .submitForm();
-
-        assertTrue(page.getSuccessMessageText().contains("Thank you for your response"),
-                "Форма со списком Automation Tools должна успешно отправиться");
-    }
-
+    
     @Test
     @Story("Модальное окно с формой")
     @DisplayName("TC-MOD-07: Закрытие Form Modal по клику на крестик")

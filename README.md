@@ -7,6 +7,15 @@
 2. **Модальные окна**: `https://practice-automation.com/modals/`
 3. **Рекламные окна**: `https://practice-automation.com/ads/`
 
+# Запуск в Chrome (по умолчанию)
+mvn clean test
+
+# Запуск в Firefox
+mvn clean test -Dbrowser=firefox
+
+# Генерация и открытие Allure-отчёта
+mvn allure:serve
+
 ---
 
 ## 1. Стек технологий и архитектура

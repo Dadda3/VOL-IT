@@ -14,18 +14,29 @@ public class AllureScreenshotExtension implements TestWatcher {
 
     @Override
     public void testFailed(ExtensionContext context, Throwable cause) {
-        Object testInstance = context.getRequiredTestInstance();
-        try {
-            Field driverField = testInstance.getClass().getSuperclass().getDeclaredField("driver");
-            driverField.setAccessible(true);
-            WebDriver driver = (WebDriver) driverField.get(testInstance);
-
-            if (driver != null) {
-                byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
-                Allure.addAttachment("Скриншот при падении теста", "image/png", new ByteArrayInputStream(screenshot), ".png");
-            }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
+        WebDriver driver = getDriver(context);
+        if (driver != null) {
+            byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+            Allure.addAttachment("Скриншот при падении теста", "image/png",
+                    new ByteArrayInputStream(screenshot), ".png");
         }
+    }
+
+    private WebDriver getDriver(ExtensionContext context) {
+        Object testInstance = context.getRequiredTestInstance();
+        Class<?> clazz = testInstance.getClass();
+
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField("driver");
+                field.setAccessible(true);
+                return (WebDriver) field.get(testInstance);
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return null;
     }
 }

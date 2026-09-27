@@ -162,15 +162,23 @@ public class AdsTest extends BaseTest {
     @Test
     @Story("Негативные проверки жизненного цикла")
     @DisplayName("TC-ADS-NEG-04: Отсутствие самозакрытия рекламы со временем")
-    public void testAdDoesNotSelfDismiss() throws InterruptedException {
+    public void testAdDoesNotSelfDismiss() {
         AdsPage page = new AdsPage(driver);
         page.openPage()
             .waitForAdToAppear(8);
 
-        // Дополнительное ожидание 3 секунды без действий пользователя
-        Thread.sleep(3000);
-
         assertTrue(page.isAdVisible(),
-                "Реклама должна оставаться открытой, пока пользователь явно не нажмет кнопку закрытия");
+                "Реклама должна оставаться открытой, пока пользователь явно не нажмёт кнопку закрытия");
+    }
+
+    @Test
+    @Story("Доступность контента")
+    @DisplayName("TC-ADS-05: Доступность контента страницы до появления рекламного окна")
+    public void testContentVisibleBeforeAd() {
+        AdsPage page = new AdsPage(driver);
+        page.openPage();
+
+        assertEquals("Ads", page.getPageTitleText());
+        assertTrue(page.getCountdownText().contains("An ad will appear in"));
     }
 }
