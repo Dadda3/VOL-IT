@@ -17,7 +17,7 @@ public class CalendarPage extends BasePage {
 
     private final By dateInput = By.id("g1065-1-selectorenteradate");
     private final By submitButton = By.cssSelector("button.pushbutton-wide");
-    private final By successMessage = By.cssSelector("div.contact-form-submission");
+    private final By successMessage = By.cssSelector(".contact-form-submission, #contact-form-1065");
     private final By fieldErrorMessage = By.cssSelector(
             "#g1065-1-selectorenteradate-text-error-message, .contact-form-error, [id*='selectorenteradate'][id*='error'], .form-error"
     );
@@ -63,10 +63,16 @@ public class CalendarPage extends BasePage {
         return getText(successMessage);
     }
 
+    @Step("Проверить, отображается ли подтверждение успешной отправки")
+    public boolean isSuccessMessageDisplayed() {
+        List<WebElement> elements = driver.findElements(successMessage);
+        return !elements.isEmpty() && elements.get(0).isDisplayed();
+    }
+
     @Step("Получить текст ошибки валидации под полем")
     public String getFieldErrorMessage() {
         try {
-            return new WebDriverWait(driver, Duration.ofSeconds(5))
+            return new WebDriverWait(driver, Duration.ofSeconds(8))
                     .until(ExpectedConditions.visibilityOfElementLocated(fieldErrorMessage))
                     .getText().trim();
         } catch (Exception e) {

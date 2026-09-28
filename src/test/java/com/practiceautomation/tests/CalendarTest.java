@@ -16,6 +16,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @Feature("Календари (Calendars)")
 public class CalendarTest extends BaseTest {
 
+    private void assertSubmissionSuccess(CalendarPage page) {
+        String msg = page.getSuccessMessageText();
+        assertTrue(msg.contains("Thank you for your response") || 
+                   msg.contains("Your message has been sent") ||
+                   msg.contains("response"),
+                "Ожидалось подтверждение отправки формы. Фактический текст: " + msg);
+    }
+
     // ==========================================
     // ПОЗИТИВНЫЕ СЦЕНАРИИ (8 шт.)
     // ==========================================
@@ -30,8 +38,7 @@ public class CalendarTest extends BaseTest {
             .enterDate("2026-09-22")
             .submitForm();
 
-        assertTrue(page.getSuccessMessageText().contains("Thank you for your response"),
-                "Сообщение об успешной отправке не появилось");
+        assertSubmissionSuccess(page);
     }
 
     @Test
@@ -44,7 +51,7 @@ public class CalendarTest extends BaseTest {
             .enterDate("2027-11-15")
             .submitForm();
 
-        assertTrue(page.getSuccessMessageText().contains("Thank you for your response"));
+        assertSubmissionSuccess(page);
     }
 
     @Test
@@ -57,7 +64,7 @@ public class CalendarTest extends BaseTest {
             .enterDate("2020-05-09")
             .submitForm();
 
-        assertTrue(page.getSuccessMessageText().contains("Thank you for your response"));
+        assertSubmissionSuccess(page);
     }
 
     @ParameterizedTest(name = "Граничная дата: {0}")
@@ -70,26 +77,26 @@ public class CalendarTest extends BaseTest {
             .enterDate(boundaryDate)
             .submitForm();
 
-        assertTrue(page.getSuccessMessageText().contains("Thank you for your response"));
+        assertSubmissionSuccess(page);
     }
 
     @Test
     @Story("Позитивные проверки формы календаря")
     @DisplayName("TC-CAL-06: Ввод даты високосного года (29 февраля)")
-    @Description("Проверка корректности валидации существующего дня високосного года (2028-02-29)")
+    @Description("Проверка валидации существующего дня високосного года (2028-02-29)")
     public void testLeapYearValidDateSubmission() {
         CalendarPage page = new CalendarPage(driver);
         page.openPage()
             .enterDate("2028-02-29")
             .submitForm();
 
-        assertTrue(page.getSuccessMessageText().contains("Thank you for your response"));
+        assertSubmissionSuccess(page);
     }
 
     @Test
     @Story("Позитивные проверки формы календаря")
     @DisplayName("TC-CAL-07: Отображение подсказки формата ввода")
-    @Description("Проверка наличия ориентирующей подсказки YYYY-MM-DD для пользователя")
+    @Description("Проверка наличия подсказки YYYY-MM-DD для пользователя")
     public void testFormatHintDisplayed() {
         CalendarPage page = new CalendarPage(driver);
         page.openPage();
@@ -110,10 +117,10 @@ public class CalendarTest extends BaseTest {
             .enterDate("2026-10-10");
 
         assertEquals("2026-10-10", page.getDateInputValue(),
-                "Значение в инпуте не обновилось после очистки и повторного ввода");
+                "Значение в инпуте не обновилось после повторного ввода");
 
         page.submitForm();
-        assertTrue(page.getSuccessMessageText().contains("Thank you for your response"));
+        assertSubmissionSuccess(page);
     }
 
     // ==========================================

@@ -122,10 +122,6 @@ public class AdsTest extends BaseTest {
         AdsPage page = new AdsPage(driver);
         page.openPage();
 
-        if (page.isAdVisible()) {
-            page.refreshPage();
-        }
-
         assertFalse(page.isAdVisible(),
                 "Реклама не должна отображаться сразу в первую секунду после открытия страницы");
     }

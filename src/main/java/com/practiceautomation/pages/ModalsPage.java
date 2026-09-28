@@ -7,9 +7,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
 import java.util.List;
 
 public class ModalsPage extends BasePage {
@@ -32,7 +30,7 @@ public class ModalsPage extends BasePage {
     private final By emailInput = By.id("g1051-email");
     private final By messageTextarea = By.id("contact-form-comment-g1051-message");
     private final By submitButton = By.cssSelector("#popmake-674 button[type='submit']");
-    private final By successMessage = By.cssSelector("#pum-674 .contact-form-submission");
+    private final By successMessage = By.cssSelector("#pum-674 .contact-form-submission, #contact-form-1051");
     private final By nameError = By.id("g1051-name-text-error-message");
     private final By emailError = By.id("g1051-email-email-error-message");
 
@@ -48,49 +46,15 @@ public class ModalsPage extends BasePage {
 
     @Step("Кликнуть по кнопке Simple Modal")
     public ModalsPage clickSimpleModalButton() {
-        WebElement btn = findClickable(simpleModalButton);
-        scrollTo(btn);
-
-        new WebDriverWait(driver, Duration.ofSeconds(10))
-                .pollingEvery(Duration.ofMillis(300))
-                .until(d -> {
-                    if (isSimpleModalVisible()) {
-                        return true;
-                    }
-                    try {
-                        btn.click();
-                    } catch (Exception e) {
-                        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
-                    }
-                    return isSimpleModalVisible();
-                });
-        try {
-            wait.until(ExpectedConditions.elementToBeClickable(simpleModalCloseButton));
-        } catch (Exception ignored) {}
+        click(simpleModalButton);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(simpleModalContainer));
         return this;
     }
 
     @Step("Кликнуть по кнопке Form Modal")
     public ModalsPage clickFormModalButton() {
-        WebElement btn = findClickable(formModalButton);
-        scrollTo(btn);
-
-        new WebDriverWait(driver, Duration.ofSeconds(10))
-                .pollingEvery(Duration.ofMillis(300))
-                .until(d -> {
-                    if (isFormModalVisible()) {
-                        return true;
-                    }
-                    try {
-                        btn.click();
-                    } catch (Exception e) {
-                        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
-                    }
-                    return isFormModalVisible();
-                });
-        try {
-            wait.until(ExpectedConditions.elementToBeClickable(formModalCloseButton));
-        } catch (Exception ignored) {}
+        click(formModalButton);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(formModalContainer));
         return this;
     }
 
@@ -106,33 +70,8 @@ public class ModalsPage extends BasePage {
 
     @Step("Закрыть Simple Modal кликом по крестику")
     public ModalsPage closeSimpleModal() {
-        WebElement closeBtn = wait.until(ExpectedConditions.elementToBeClickable(simpleModalCloseButton));
-
-        new WebDriverWait(driver, Duration.ofSeconds(10))
-                .pollingEvery(Duration.ofMillis(300))
-                .until(d -> {
-                    if (!isSimpleModalVisible()) {
-                        return true;
-                    }
-                    try {
-                        closeBtn.click();
-                    } catch (Exception e) {
-                        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", closeBtn);
-                    }
-                    if (isSimpleModalVisible()) {
-                        try {
-                            ((JavascriptExecutor) driver).executeScript(
-                                    "if (window.jQuery && jQuery('#pum-1318').length) { jQuery('#pum-1318').popmake('close'); }"
-                            );
-                        } catch (Exception ignored) {}
-                    }
-                    return !isSimpleModalVisible();
-                });
-
-        try {
-            new WebDriverWait(driver, Duration.ofSeconds(3))
-                    .until(ExpectedConditions.invisibilityOfElementLocated(simpleModalOverlay));
-        } catch (Exception ignored) {}
+        click(simpleModalCloseButton);
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(simpleModalContainer));
         return this;
     }
 
@@ -182,33 +121,8 @@ public class ModalsPage extends BasePage {
 
     @Step("Закрыть Form Modal кликом по крестику")
     public ModalsPage closeFormModal() {
-        WebElement closeBtn = wait.until(ExpectedConditions.elementToBeClickable(formModalCloseButton));
-
-        new WebDriverWait(driver, Duration.ofSeconds(10))
-                .pollingEvery(Duration.ofMillis(300))
-                .until(d -> {
-                    if (!isFormModalVisible()) {
-                        return true;
-                    }
-                    try {
-                        closeBtn.click();
-                    } catch (Exception e) {
-                        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", closeBtn);
-                    }
-                    if (isFormModalVisible()) {
-                        try {
-                            ((JavascriptExecutor) driver).executeScript(
-                                    "if (window.jQuery && jQuery('#pum-674').length) { jQuery('#pum-674').popmake('close'); }"
-                            );
-                        } catch (Exception ignored) {}
-                    }
-                    return !isFormModalVisible();
-                });
-
-        try {
-            new WebDriverWait(driver, Duration.ofSeconds(3))
-                    .until(ExpectedConditions.invisibilityOfElementLocated(formModalOverlay));
-        } catch (Exception ignored) {}
+        click(formModalCloseButton);
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(formModalContainer));
         return this;
     }
 

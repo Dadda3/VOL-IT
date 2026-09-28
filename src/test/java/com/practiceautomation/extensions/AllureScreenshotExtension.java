@@ -9,6 +9,7 @@ import org.openqa.selenium.WebDriver;
 
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 
 public class AllureScreenshotExtension implements AfterTestExecutionCallback {
 
@@ -24,6 +25,14 @@ public class AllureScreenshotExtension implements AfterTestExecutionCallback {
                 } catch (Exception e) {
                     System.err.println("Не удалось прикрепить скриншот в Allure: " + e.getMessage());
                 }
+
+                try {
+                    String pageSource = driver.getPageSource();
+                    if (pageSource != null) {
+                        Allure.addAttachment("Исходный HTML код страницы (Page Source)", "text/html",
+                                new ByteArrayInputStream(pageSource.getBytes(StandardCharsets.UTF_8)), ".html");
+                    }
+                } catch (Exception ignored) {}
             }
         }
     }

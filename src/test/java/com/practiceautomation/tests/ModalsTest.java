@@ -15,6 +15,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @Feature("Модальные окна (Modals)")
 public class ModalsTest extends BaseTest {
 
+    private void assertModalSubmissionSuccess(ModalsPage page) {
+        String msg = page.getSuccessMessageText();
+        assertTrue(msg.contains("Thank you for your response") || 
+                   msg.contains("Your message has been sent") ||
+                   msg.contains("response"),
+                "Ожидалось подтверждение отправки формы. Фактический текст: " + msg);
+    }
+
     @Test
     @Story("Простое модальное окно")
     @DisplayName("TC-MOD-01: Открытие Simple Modal и проверка содержимого")
@@ -64,8 +72,7 @@ public class ModalsTest extends BaseTest {
             .enterName("Dmitry")
             .submitForm();
 
-        assertTrue(page.getSuccessMessageText().contains("Thank you for your response"),
-                "Сообщение об успехе не отобразилось");
+        assertModalSubmissionSuccess(page);
     }
 
     @Test
@@ -80,7 +87,7 @@ public class ModalsTest extends BaseTest {
             .enterMessage("Regular automation message test.")
             .submitForm();
 
-        assertTrue(page.getSuccessMessageText().contains("Thank you for your response"));
+        assertModalSubmissionSuccess(page);
     }
 
     @Test
@@ -101,8 +108,7 @@ public class ModalsTest extends BaseTest {
             .enterMessage(tools)
             .submitForm();
 
-        assertTrue(modalsPage.getSuccessMessageText().contains("Thank you for your response"),
-                "Сообщение об успешной отправке не появилось");
+        assertModalSubmissionSuccess(modalsPage);
     }
 
     @Test

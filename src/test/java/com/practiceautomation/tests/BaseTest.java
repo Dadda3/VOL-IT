@@ -20,18 +20,23 @@ public abstract class BaseTest {
     @BeforeEach
     public void setUp() {
         String browser = System.getProperty("browser", "chrome").toLowerCase();
+        boolean headless = Boolean.parseBoolean(System.getProperty("headless", "true"));
 
         if ("firefox".equals(browser)) {
             FirefoxOptions options = new FirefoxOptions();
-            options.setPageLoadStrategy(PageLoadStrategy.EAGER);
+            options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
             options.addArguments("--width=1920", "--height=1080");
-            options.addArguments("-headless");
+            if (headless) {
+                options.addArguments("-headless");
+            }
             driver = new FirefoxDriver(options);
         } else {
             ChromeOptions options = new ChromeOptions();
-            options.setPageLoadStrategy(PageLoadStrategy.EAGER);
+            options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
             options.addArguments("--window-size=1920,1080");
-            options.addArguments("--headless=new");
+            if (headless) {
+                options.addArguments("--headless=new");
+            }
             options.addArguments("--disable-gpu");
             options.addArguments("--no-sandbox");
             options.addArguments("--disable-dev-shm-usage");
