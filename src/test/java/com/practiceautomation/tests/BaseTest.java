@@ -41,11 +41,14 @@ public abstract class BaseTest {
             options.addArguments("--no-sandbox");
             options.addArguments("--disable-dev-shm-usage");
             options.addArguments("--remote-allow-origins=*");
+            // Исключение сетевых зависаний на встроенных медиа-ресурсах
+            options.addArguments("--host-resolver-rules=MAP *.youtube.com 127.0.0.1, MAP *.googlevideo.com 127.0.0.1, MAP *.ytimg.com 127.0.0.1, MAP *.doubleclick.net 127.0.0.1");
             driver = new ChromeDriver(options);
         }
 
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(0));
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
     }
 
     @AfterEach

@@ -15,9 +15,13 @@ import java.util.List;
 public class CalendarPage extends BasePage {
     public static final String PAGE_URL = "https://practice-automation.com/calendars/";
 
-    private final By dateInput = By.id("g1065-1-selectorenteradate");
-    private final By submitButton = By.cssSelector("button.pushbutton-wide");
-    private final By successMessage = By.cssSelector(".contact-form-submission, #contact-form-1065");
+    private final By dateInput = By.cssSelector("#g1065-1-selectorenteradate, input[name*='selectorenteradate']");
+    private final By submitButton = By.cssSelector(
+            "button.pushbutton-wide, input.pushbutton-wide, input[type='submit'], button[type='submit']"
+    );
+    private final By successMessage = By.cssSelector(
+            ".contact-form-submission, #contact-form-1065 h4, .contact-form-success, .form-success"
+    );
     private final By fieldErrorMessage = By.cssSelector(
             "#g1065-1-selectorenteradate-text-error-message, .contact-form-error, [id*='selectorenteradate'][id*='error'], .form-error"
     );
@@ -72,6 +76,15 @@ public class CalendarPage extends BasePage {
     @Step("Получить текст ошибки валидации под полем")
     public String getFieldErrorMessage() {
         try {
+            WebElement input = driver.findElement(dateInput);
+            String validationMsg = (String) ((JavascriptExecutor) driver)
+                    .executeScript("return arguments[0].validationMessage;", input);
+            if (validationMsg != null && !validationMsg.trim().isEmpty()) {
+                return validationMsg.trim();
+            }
+        } catch (Exception ignored) {}
+
+        try {
             return new WebDriverWait(driver, Duration.ofSeconds(8))
                     .until(ExpectedConditions.visibilityOfElementLocated(fieldErrorMessage))
                     .getText().trim();
@@ -82,14 +95,6 @@ public class CalendarPage extends BasePage {
                     return el.getText().trim();
                 }
             }
-            try {
-                WebElement input = driver.findElement(dateInput);
-                String validationMessage = (String) ((JavascriptExecutor) driver)
-                        .executeScript("return arguments[0].validationMessage;", input);
-                if (validationMessage != null && !validationMessage.trim().isEmpty()) {
-                    return validationMessage.trim();
-                }
-            } catch (Exception ignored) {}
             return "";
         }
     }

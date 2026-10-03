@@ -64,12 +64,14 @@ public class ModalsTest extends BaseTest {
 
     @Test
     @Story("Модальное окно с формой")
-    @DisplayName("TC-MOD-04: Успешная отправка формы с заполнением только обязательного поля (Name)")
-    public void testSubmitFormWithMandatoryFieldOnly() {
+    @DisplayName("TC-MOD-04: Успешная отправка формы с заполнением обязательных полей (Name и Email)")
+    @Description("Проверка сабмита формы при заполнении обязательных полей Name и Email без необязательного Message")
+    public void testSubmitFormWithMandatoryFieldsOnly() {
         ModalsPage page = new ModalsPage(driver);
         page.openPage()
             .clickFormModalButton()
             .enterName("Dmitry")
+            .enterEmail("dmitry@example.com")
             .submitForm();
 
         assertModalSubmissionSuccess(page);
@@ -161,6 +163,7 @@ public class ModalsTest extends BaseTest {
         ModalsPage page = new ModalsPage(driver);
         page.openPage()
             .clickFormModalButton()
+            .enterEmail("valid@example.com")
             .submitForm();
 
         assertFalse(page.getNameErrorMessage().isEmpty(),
@@ -192,7 +195,7 @@ public class ModalsTest extends BaseTest {
             .submitForm();
 
         assertTrue(page.isFormModalVisible(), "Модальное окно не должно закрываться при ошибке сабмита");
-        assertFalse(page.getNameErrorMessage().isEmpty());
+        assertFalse(page.getNameErrorMessage().isEmpty(), "Должна отобразиться ошибка незаполненного поля Name");
     }
 
     @Test

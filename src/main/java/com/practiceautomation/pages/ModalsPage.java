@@ -29,8 +29,8 @@ public class ModalsPage extends BasePage {
     private final By nameInput = By.id("g1051-name");
     private final By emailInput = By.id("g1051-email");
     private final By messageTextarea = By.id("contact-form-comment-g1051-message");
-    private final By submitButton = By.cssSelector("#popmake-674 button[type='submit']");
-    private final By successMessage = By.cssSelector("#pum-674 .contact-form-submission, #contact-form-1051");
+    private final By submitButton = By.cssSelector("#popmake-674 button[type='submit'], #popmake-674 input[type='submit']");
+    private final By successMessage = By.cssSelector("#pum-674 .contact-form-submission, #pum-674 #contact-form-1051 h4");
     private final By nameError = By.id("g1051-name-text-error-message");
     private final By emailError = By.id("g1051-email-email-error-message");
 
@@ -47,14 +47,24 @@ public class ModalsPage extends BasePage {
     @Step("Кликнуть по кнопке Simple Modal")
     public ModalsPage clickSimpleModalButton() {
         click(simpleModalButton);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(simpleModalContainer));
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(simpleModalContainer));
+        } catch (Exception e) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(simpleModalButton));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(simpleModalContainer));
+        }
         return this;
     }
 
     @Step("Кликнуть по кнопке Form Modal")
     public ModalsPage clickFormModalButton() {
         click(formModalButton);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(formModalContainer));
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(formModalContainer));
+        } catch (Exception e) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(formModalButton));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(formModalContainer));
+        }
         return this;
     }
 
@@ -111,12 +121,12 @@ public class ModalsPage extends BasePage {
 
     @Step("Получить текст ошибки поля Name")
     public String getNameErrorMessage() {
-        return getText(nameError);
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(nameError)).getText().trim();
     }
 
     @Step("Получить текст ошибки поля Email")
     public String getEmailErrorMessage() {
-        return getText(emailError);
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(emailError)).getText().trim();
     }
 
     @Step("Закрыть Form Modal кликом по крестику")
@@ -131,10 +141,10 @@ public class ModalsPage extends BasePage {
         By overlayLocator = isSimpleModal ? simpleModalOverlay : formModalOverlay;
         WebElement overlay = find(overlayLocator);
         try {
-            new Actions(driver).moveToLocation(10, 10).click().perform();
+            new Actions(driver).moveToElement(overlay, 15, 15).click().perform();
         } catch (Exception e) {
             ((JavascriptExecutor) driver).executeScript(
-                    "arguments[0].dispatchEvent(new MouseEvent('click', {clientX: 10, clientY: 10, bubbles: true}));",
+                    "arguments[0].dispatchEvent(new MouseEvent('click', {clientX: 15, clientY: 15, bubbles: true}));",
                     overlay
             );
         }

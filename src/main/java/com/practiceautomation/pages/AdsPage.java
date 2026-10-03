@@ -18,7 +18,7 @@ public class AdsPage extends BasePage {
 
     private final By pageTitle = By.tagName("h1");
     private final By countdownText = By.xpath("//p[contains(text(),'An ad will appear')]");
-    private final By videoTutorialLink = By.linkText("how to handle ads in test automation");
+    private final By videoTutorialLink = By.partialLinkText("how to handle ads");
 
     private final By adOverlay = By.id("pum-1272");
     private final By adContainer = By.id("popmake-1272");
@@ -78,7 +78,11 @@ public class AdsPage extends BasePage {
 
     @Step("Получить текст обратного отсчета со страницы")
     public String getCountdownText() {
-        return getText(countdownText);
+        try {
+            return getText(countdownText);
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     @Step("Проверить доступность и кликабельность ссылки на странице")
@@ -88,17 +92,18 @@ public class AdsPage extends BasePage {
 
     @Step("Проверить наличие класса темы оформления у рекламного оверлея")
     public boolean hasThemeClass(String themeClassName) {
-        return find(adOverlay).getAttribute("class").contains(themeClassName);
+        String classes = find(adOverlay).getAttribute("class");
+        return classes != null && classes.contains(themeClassName);
     }
 
     @Step("Кликнуть по оверлею вне области рекламного окна")
     public AdsPage clickOverlayOutsideAd() {
         WebElement overlay = find(adOverlay);
         try {
-            new Actions(driver).moveToLocation(10, 10).click().perform();
+            new Actions(driver).moveToElement(overlay, 15, 15).click().perform();
         } catch (Exception e) {
             ((JavascriptExecutor) driver).executeScript(
-                    "arguments[0].dispatchEvent(new MouseEvent('click', {clientX: 10, clientY: 10, bubbles: true}));",
+                    "arguments[0].dispatchEvent(new MouseEvent('click', {clientX: 15, clientY: 15, bubbles: true}));",
                     overlay
             );
         }

@@ -15,18 +15,20 @@ import java.util.stream.Collectors;
 public class FormFieldsPage extends BasePage {
     public static final String PAGE_URL = "https://practice-automation.com/form-fields/";
 
-    private final By nameInput = By.cssSelector("#name-input, #name");
+    private final By nameInput = By.cssSelector("#name-input, #name, input[name='name-input']");
     private final By emailInput = By.cssSelector("#email, input[type='email']");
-    private final By messageTextarea = By.cssSelector("#message, textarea");
-    private final By submitButton = By.id("submit-btn");
+    private final By messageTextarea = By.cssSelector("#message, textarea[name='message']");
+    private final By submitButton = By.cssSelector("#submit-btn, button[type='submit']");
+
+    private final By automationToolsSection = By.xpath(
+            "//*[contains(translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'automation tools')]"
+    );
 
     private final By automationToolsItems = By.xpath(
-            "//label[contains(translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'automation tools')]" +
-            "/following-sibling::ul[1]//label | " +
-            "//label[contains(translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'automation tools')]" +
-            "/following-sibling::ul[1]//li | " +
-            "//input[@name='g1103-whatareyourautomationtools[]']/following-sibling::label | " +
-            "//input[contains(@id, 'automation-tools')]/following-sibling::label"
+            "//*[contains(translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'automation tools')]/following::ul[1]//label | " +
+            "//*[contains(translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'automation tools')]/following::ul[1]//li | " +
+            "//input[contains(@name, 'automation')]/following-sibling::label | " +
+            "//input[contains(@id, 'automation')]/following-sibling::label"
     );
 
     public FormFieldsPage(WebDriver driver) {
@@ -41,8 +43,14 @@ public class FormFieldsPage extends BasePage {
 
     @Step("Получить список Automation Tools в виде строки через запятую средствами Selenium")
     public String getAutomationToolsJoined() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(automationToolsItems));
+        wait.until(ExpectedConditions.presenceOfElementLocated(automationToolsSection));
         List<WebElement> items = driver.findElements(automationToolsItems);
+
+        if (items.isEmpty()) {
+            items = driver.findElements(By.xpath(
+                    "//label[contains(text(),'Selenium') or contains(text(),'Playwright') or contains(text(),'Cypress') or contains(text(),'WebDriverIO')]"
+            ));
+        }
 
         return items.stream()
                 .map(WebElement::getText)

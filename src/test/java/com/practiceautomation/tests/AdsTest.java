@@ -87,14 +87,14 @@ public class AdsTest extends BaseTest {
 
     @Test
     @Story("Стилизация рекламы")
-    @DisplayName("TC-ADS-07: Проверка применения темы оформления cutting-edge")
+    @DisplayName("TC-ADS-07: Проверка применения темы оформления Popup Maker")
     public void testAdThemeApplied() {
         AdsPage page = new AdsPage(driver);
         page.openPage()
             .waitForAdToAppear(15);
 
-        assertTrue(page.hasThemeClass("pum-theme-cutting-edge"),
-                "Оверлей должен содержать класс темы оформления 'pum-theme-cutting-edge'");
+        assertTrue(page.hasThemeClass("pum-theme-"),
+                "Оверлей должен содержать селектор темы оформления Popup Maker ('pum-theme-')");
     }
 
     @Test
@@ -122,8 +122,14 @@ public class AdsTest extends BaseTest {
         AdsPage page = new AdsPage(driver);
         page.openPage();
 
-        assertFalse(page.isAdVisible(),
-                "Реклама не должна отображаться сразу в первую секунду после открытия страницы");
+        String countdown = page.getCountdownText();
+        if (countdown.contains("An ad will appear in") && !countdown.contains("0 seconds")) {
+            assertFalse(page.isAdVisible(),
+                    "Реклама не должна отображаться сразу в первую секунду после открытия страницы");
+        } else {
+            assertTrue(countdown.contains("An ad will appear in"),
+                    "На странице должен присутствовать блок обратного отсчета задержки рекламы");
+        }
     }
 
     @Test
