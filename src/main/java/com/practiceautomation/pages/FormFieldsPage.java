@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FormFieldsPage extends BasePage {
-    public static final String PAGE_URL = "https://practice-automation.com/form-fields/";
+    public static final String PAGE_URL = BASE_URL + "/form-fields/";
 
     private final By nameInput = By.cssSelector("#name-input, #name, input[name='name-input']");
     private final By emailInput = By.cssSelector("#email, input[type='email']");
@@ -40,8 +40,11 @@ public class FormFieldsPage extends BasePage {
     public String getAutomationToolsJoined() {
         wait.until(ExpectedConditions.presenceOfElementLocated(automationToolsSection));
         List<WebElement> items = driver.findElements(automationToolsItems);
-
-        
+        return items.stream()
+                .map(el -> el.getText().trim())
+                .filter(text -> !text.isEmpty())
+                .collect(Collectors.joining(", "));
+    }
 
     @Step("Заполнить поле Name: {name}")
     public FormFieldsPage enterName(String name) {

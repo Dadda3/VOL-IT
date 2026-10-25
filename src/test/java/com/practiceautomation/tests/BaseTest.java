@@ -17,6 +17,10 @@ import java.time.Duration;
 public abstract class BaseTest {
     protected WebDriver driver;
 
+    public WebDriver getDriver() {
+        return driver;
+    }
+
     @BeforeEach
     public void setUp() {
         String browser = System.getProperty("browser", "chrome").toLowerCase();
@@ -41,7 +45,6 @@ public abstract class BaseTest {
             options.addArguments("--no-sandbox");
             options.addArguments("--disable-dev-shm-usage");
             options.addArguments("--remote-allow-origins=*");
-            // Исключение сетевых зависаний на встроенных медиа-ресурсах
             options.addArguments("--host-resolver-rules=MAP *.youtube.com 127.0.0.1, MAP *.googlevideo.com 127.0.0.1, MAP *.ytimg.com 127.0.0.1, MAP *.doubleclick.net 127.0.0.1");
             driver = new ChromeDriver(options);
         }

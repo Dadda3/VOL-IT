@@ -11,7 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.util.List;
 
 public class ModalsPage extends BasePage {
-    public static final String PAGE_URL = "https://practice-automation.com/modals/";
+    public static final String PAGE_URL = BASE_URL + "/modals/";
 
     private final By simpleModalButton = By.id("simpleModal");
     private final By formModalButton = By.id("formModal");

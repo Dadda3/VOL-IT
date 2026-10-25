@@ -13,7 +13,7 @@ import java.time.Duration;
 import java.util.List;
 
 public class CalendarPage extends BasePage {
-    public static final String PAGE_URL = "https://practice-automation.com/calendars/";
+    public static final String PAGE_URL = BASE_URL + "/calendars/";
 
     private final By dateInput = By.cssSelector("#g1065-1-selectorenteradate, input[name*='selectorenteradate']");
     private final By submitButton = By.cssSelector(

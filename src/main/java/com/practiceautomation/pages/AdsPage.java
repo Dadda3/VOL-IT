@@ -14,7 +14,7 @@ import java.time.Duration;
 import java.util.List;
 
 public class AdsPage extends BasePage {
-    public static final String PAGE_URL = "https://practice-automation.com/ads/";
+    public static final String PAGE_URL = BASE_URL + "/ads/";
 
     private final By pageTitle = By.tagName("h1");
     private final By countdownText = By.xpath("//p[contains(text(),'An ad will appear')]");

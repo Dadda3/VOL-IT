@@ -93,8 +93,8 @@ public class AdsTest extends BaseTest {
         page.openPage()
             .waitForAdToAppear(15);
 
-        assertTrue(page.hasThemeClass("pum-theme-"),
-                "Оверлей должен содержать селектор темы оформления Popup Maker ('pum-theme-')");
+        assertTrue(page.hasThemeClass("pum-theme-cutting-edge"),
+                "Оверлей должен содержать селектор темы оформления Popup Maker ('pum-theme-cutting-edge')");
     }
 
     @Test

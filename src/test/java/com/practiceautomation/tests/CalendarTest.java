@@ -19,8 +19,7 @@ public class CalendarTest extends BaseTest {
     private void assertSubmissionSuccess(CalendarPage page) {
         String msg = page.getSuccessMessageText();
         assertTrue(msg.contains("Thank you for your response") || 
-                   msg.contains("Your message has been sent") ||
-                   msg.contains("response"),
+                   msg.contains("Your message has been sent"),
                 "Ожидалось подтверждение отправки формы. Фактический текст: " + msg);
     }
 
