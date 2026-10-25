@@ -24,12 +24,7 @@ public class FormFieldsPage extends BasePage {
             "//*[contains(translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'automation tools')]"
     );
 
-    private final By automationToolsItems = By.xpath(
-            "//*[contains(translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'automation tools')]/following::ul[1]//label | " +
-            "//*[contains(translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'automation tools')]/following::ul[1]//li | " +
-            "//input[contains(@name, 'automation')]/following-sibling::label | " +
-            "//input[contains(@id, 'automation')]/following-sibling::label"
-    );
+    private final By automationToolsItems = By.xpath("//*[contains(translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'automation tools')]/following::ul[1]//li");
 
     public FormFieldsPage(WebDriver driver) {
         super(driver);
@@ -46,19 +41,7 @@ public class FormFieldsPage extends BasePage {
         wait.until(ExpectedConditions.presenceOfElementLocated(automationToolsSection));
         List<WebElement> items = driver.findElements(automationToolsItems);
 
-        if (items.isEmpty()) {
-            items = driver.findElements(By.xpath(
-                    "//label[contains(text(),'Selenium') or contains(text(),'Playwright') or contains(text(),'Cypress') or contains(text(),'WebDriverIO')]"
-            ));
-        }
-
-        return items.stream()
-                .map(WebElement::getText)
-                .map(String::trim)
-                .filter(text -> !text.isEmpty())
-                .distinct()
-                .collect(Collectors.joining(", "));
-    }
+        
 
     @Step("Заполнить поле Name: {name}")
     public FormFieldsPage enterName(String name) {

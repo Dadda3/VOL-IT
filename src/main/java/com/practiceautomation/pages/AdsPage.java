@@ -26,6 +26,17 @@ public class AdsPage extends BasePage {
     private final By adContent = By.cssSelector("#popmake-1272 .pum-content p");
     private final By adCloseButton = By.cssSelector("#popmake-1272 .pum-close");
 
+    @Step("Проверить, что реклама не исчезает в течение {seconds} сек.")
+    public boolean isAdStillVisibleAfter(int seconds) {
+        try {
+            new WebDriverWait(driver, Duration.ofSeconds(seconds))
+                    .until(ExpectedConditions.invisibilityOfElementLocated(adContainer));
+            return false;
+        } catch (org.openqa.selenium.TimeoutException e) {
+            return isAdVisible();
+        }
+    }
+
     public AdsPage(WebDriver driver) {
         super(driver);
     }

@@ -42,7 +42,7 @@ public class CalendarPage extends BasePage {
         WebElement input = findClickable(dateInput);
         scrollTo(input);
         input.clear();
-        input.sendKeys(Keys.chord(Keys.CONTROL, "a"), Keys.BACK_SPACE);
+        input.sendKeys(Keys.chord(System.getProperty("os.name", "").toLowerCase().contains("mac") ? Keys.COMMAND : Keys.CONTROL, "a"), Keys.BACK_SPACE);
         input.sendKeys(date);
         return this;
     }
@@ -52,7 +52,7 @@ public class CalendarPage extends BasePage {
         WebElement input = findClickable(dateInput);
         scrollTo(input);
         input.clear();
-        input.sendKeys(Keys.chord(Keys.CONTROL, "a"), Keys.BACK_SPACE);
+        input.sendKeys(Keys.chord(System.getProperty("os.name", "").toLowerCase().contains("mac") ? Keys.COMMAND : Keys.CONTROL, "a"), Keys.BACK_SPACE);
         return this;
     }
 

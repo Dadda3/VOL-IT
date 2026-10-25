@@ -123,13 +123,10 @@ public class AdsTest extends BaseTest {
         page.openPage();
 
         String countdown = page.getCountdownText();
-        if (countdown.contains("An ad will appear in") && !countdown.contains("0 seconds")) {
-            assertFalse(page.isAdVisible(),
-                    "Реклама не должна отображаться сразу в первую секунду после открытия страницы");
-        } else {
-            assertTrue(countdown.contains("An ad will appear in"),
-                    "На странице должен присутствовать блок обратного отсчета задержки рекламы");
-        }
+        assertTrue(countdown.contains("An ad will appear in"),
+                "На странице должен присутствовать блок обратного отсчета задержки рекламы");
+        assertFalse(page.isAdVisible(),
+                "Реклама не должна отображаться сразу в первую секунду после открытия страницы");
     }
 
     @Test
@@ -166,11 +163,6 @@ public class AdsTest extends BaseTest {
         page.openPage()
             .waitForAdToAppear(15);
 
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException ignored) {}
-
-        assertTrue(page.isAdVisible(),
-                "Реклама должна оставаться открытой, пока пользователь явно не нажмёт кнопку закрытия");
+        assertTrue(page.isAdStillVisibleAfter(3), "Реклама должна оставаться открытой, пока пользователь явно не нажмёт кнопку закрытия");
     }
 }
