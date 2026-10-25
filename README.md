@@ -55,19 +55,19 @@
 
 ## 3. Сводная матрица тестового покрытия
 
-| Модуль / Страница | Позитивные тесты | Негативные тесты | Всего тестов |
-| --- | --- | --- | --- | --- |
-| **Календари** (`/calendars/`) | 8 (9 прогонов) | 4 | 13 |
-| **Модальные окна** (`/modals/`) | 9 | 4 | 13 |
-| **Рекламные окна** (`/ads/`) | 8 | 4 | 12 |
-| **Форма** (`/form-fields/`) | 1 | — |  1 |
-| **ИТОГО** | **26** | **12** | **39** |
+| Модуль / страница | Позитивные тесты | Негативные тесты | Всего тестов |
+| --- | --- | --- | --- |
+| Календари (`/calendars/`) | 8 (9 прогонов) | 4 | 13 |
+| Модальные окна (`/modals/`) | 9 | 4 | 13 |
+| Рекламные окна (`/ads/`) | 8 | 4 | 12 |
+| Форма (`/form-fields/`) | 1 | — | 1 |
+| ИТОГО | 26 | 12 | 39 |
 
 ---
 
 ## 4. Спецификация тестовых сценариев (Test Cases)
 
-### 4.1. Модуль «Календари» (`[https://practice-automation.com/calendars/](https://practice-automation.com/calendars/)`)
+### 4.1. Модуль «Календари» (`(https://practice-automation.com/calendars/)`)
 
 
 
@@ -200,7 +200,7 @@
 
 ---
 
-### 4.2. Модуль «Модальные окна» (`[https://practice-automation.com/modals/](https://practice-automation.com/modals/)`)
+### 4.2. Модуль «Модальные окна» (`(https://practice-automation.com/modals/)`)
 
 
 
@@ -359,7 +359,7 @@
 
 ---
 
-### 4.3. Модуль «Рекламные окна» (`[https://practice-automation.com/ads/](https://practice-automation.com/ads/)`)
+### 4.3. Модуль «Рекламные окна» (`(https://practice-automation.com/ads/)`)
 
 
 
@@ -503,7 +503,7 @@
 
 ---
 
-### 4.4. Модуль «Форма» (`[https://practice-automation.com/form-fields/](https://practice-automation.com/form-fields/)`)
+### 4.4. Модуль «Форма» (`(https://practice-automation.com/form-fields/)`)
 
 
 
